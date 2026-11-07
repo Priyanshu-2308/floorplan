@@ -22,10 +22,12 @@ You produce `floorplan/` at the codebase root: a floorplan of the app that someo
 
 The scripts do the mechanical work: finding repos, parsing imports and routes, matching HTTP calls to endpoints, layout and rendering. Your job is the part only a reader of the code can do: deciding what things *are* and saying so plainly.
 
+We ask before changing any of the user's app code. We never touch logins or secrets.
+
 Existing map: !`node ${CLAUDE_SKILL_DIR}/scripts/status.mjs || true`
 Arguments: $ARGUMENTS
 
-**In Codex** (or any agent that left the two lines above unfilled): `${CLAUDE_SKILL_DIR}` in every command here means this skill's folder, the one holding this SKILL.md, so use its path. Run `node <that folder>/scripts/status.mjs` from the codebase root yourself to see whether a map exists, and take the path and `--refresh` from the user's request. The scripts notice they're running under Codex, so the map's Ask bar and "Fix with" prompts use Codex.
+**In Codex** (or any agent that left the two lines above unfilled): `${CLAUDE_SKILL_DIR}` in every command here means this skill's folder, the one holding this SKILL.md, so use its path. When we copy the skill folder on its own and `${CLAUDE_SKILL_DIR}` is not filled in, use the path to this skill folder. Run `node <that folder>/scripts/status.mjs` from the codebase root yourself to see whether a map exists, and take the path and `--refresh` from the user's request. The scripts notice they're running under Codex, so the map's Ask bar and "Fix with" prompts use Codex.
 
 ## Nothing built yet? Draw a blueprint
 
@@ -94,14 +96,14 @@ The codebase root is the argument if one was given, otherwise the current direct
 
    **Nothing Floorplan makes is committed.** `floorplan/` holds its own `.gitignore` that ignores the whole folder, so the project's tracked files aren't touched. If git already tracks files there, the build prints the `git rm -r --cached` command to untrack them; pass it on to the user rather than running it.
 
-   **A note for future sessions, only if the user wants one.** In Claude Code, the build can keep a short marked block in the project's `CLAUDE.local.md`, Claude Code's personal, uncommitted project notes, which load at session start like CLAUDE.md. The block tells future Claude Code sessions here that the map exists and how to look things up in it with `floorplan/query.mjs`, so they start from the map instead of searching the code from scratch. Because it changes how later sessions work, the build never adds it on its own: it reports `CLAUDE.LOCAL.MD  not added`, and you offer it in your report (step 8). Only when the user says yes, run `node ${CLAUDE_SKILL_DIR}/scripts/build.mjs <root> --claude-md`. Once the block exists, every build keeps it current. The build adds `CLAUDE.local.md` to the repo's local ignore list (`.git/info/exclude`, not `.gitignore`), rewrites only its own block, and moves the block out of `CLAUDE.md` if an older version put it there. To remove it, the user deletes the block, or puts `<!-- floorplan:off -->` in CLAUDE.local.md to keep it from coming back. Under Codex the build skips this: Codex has no personal, uncommitted notes file (AGENTS.md is shared with the team), so don't add one there either.
+   **A note for future sessions, only if the user wants one.** In Claude Code, the build can keep a short marked block in the project's `CLAUDE.local.md`, Claude Code's personal, uncommitted project notes, which load at session start like CLAUDE.md. The block tells future Claude Code sessions here that the map exists and how to look things up in it with `floorplan/query.mjs`, so they start from the map instead of searching the code from scratch. Because it changes how later sessions work, the build never adds it on its own: it reports `CLAUDE.LOCAL.MD  not added`, and you offer it in your report (step 8). Only when the user says yes, run `node ${CLAUDE_SKILL_DIR}/scripts/build.mjs <root> --claude-md`. Once the block exists, every build keeps it current. The build adds `CLAUDE.local.md` to the repo's local ignore list (`.git/info/exclude`, not `.gitignore`), rewrites only its own block, and moves the block out of `CLAUDE.md` if an older version put it there. To remove it, the user deletes the block, or puts `<!-- floorplan:off -->` in CLAUDE.local.md to keep it from coming back. Under Codex the build skips this: Codex has no personal, uncommitted notes file (AGENTS.md is shared with the team), so don't add one there either. When we run outside Claude Code, or if that tool is missing, we skip this step.
 
 6. **Describe every file and route.**
    `node ${CLAUDE_SKILL_DIR}/scripts/describe.mjs <root>`
    This writes one worksheet per module (`floorplan/.cache/worksheets/<key>.md`) and a skeleton to fill in (`floorplan/descriptions/<key>.json`). Each worksheet holds a digest of every file (docstrings, definitions, what it uses and what uses it) and every route (handler, docstring), which is enough to describe most files without opening them.
    - Read [references/writing-descriptions.md](references/writing-descriptions.md) first.
    - **More than ~150 files:** split the worksheets across parallel subagents if you have them, ~100–150 files each, grouped by area (backend routes, services, scripts, tests, UI). Give each one its worksheet keys, the codebase root and the writing guide, and tell it to edit only its own `descriptions/<key>.json` files and keep the keys unchanged.
-   - **Smaller codebases:** do it yourself.
+   - **Smaller codebases:** do it yourself. If we do not have parallel subagents, we do it directly in one pass.
 
    Then rebuild. The build reports `DESCRIPTIONS files X/Y · routes X/Y`. Get both to 100%: re-run describe.mjs and it lists only what's still missing.
 
@@ -124,7 +126,7 @@ The codebase root is the argument if one was given, otherwise the current direct
    - If you have an in-app browser or preview tool, pass `--no-open` and open the printed URL there instead, so the map appears right beside the conversation.
    - If this is a remote or headless machine where the user can't reach 127.0.0.1, skip open.mjs and tell them to run `node floorplan/serve.mjs` on their own machine, or offer the Claude app route (step 9).
 
-   Then **report.** Give the URL, then describe the architecture you mapped in 3–5 lines, in the user's language, including anything surprising: cycles, god-files, dead areas, coupled subsystems. Always mention the **high-severity Health items** (`graph.health`; the build output and graph.json list them). Hard-coded passwords/keys and endpoints anyone can change data through are things the owner needs to hear about. Never repeat a secret's value. Say that `architecture.json` and `descriptions/` are theirs to edit, and that after more work they can just ask to "update the floorplan", which re-reads only what changed. Give them those plain words rather than a command: in Claude Code the plugin's command is `/floorplan:floorplan` (`/floorplan` as a personal skill), and in Codex it's `$floorplan`. On a first run, mention in one line that the map stays out of git. In Claude Code, when the build said `CLAUDE.LOCAL.MD  not added`, end by asking once whether future Claude Code sessions in this project should use the map: you'd add a short note to their personal, uncommitted CLAUDE.local.md. Add it (`build.mjs <root> --claude-md`) only on a yes, and don't ask again on later updates if they said no. On an update, start with what changed for what they asked (it's highlighted under **Recent work**).
+   Then **report.** Give the URL, then describe the architecture you mapped in 3–5 lines, in the user's language, including anything surprising: cycles, god-files, dead areas, coupled subsystems. Always mention the **high-severity Health items** (`graph.health`; the build output and graph.json list them). Hard-coded passwords/keys and endpoints anyone can change data through are things the owner needs to hear about. Never repeat a secret's value. Say that `architecture.json` and `descriptions/` are theirs to edit, and that after more work they can just ask to "update the floorplan", which re-reads only what changed. Give them those plain words rather than a command: in Claude Code the plugin's command is `/floorplan:floorplan` (`/floorplan` as a personal skill), and in Codex it's `$floorplan`. On a first run, mention in one line that the map stays out of git. In Claude Code, when the build said `CLAUDE.LOCAL.MD  not added`, end by asking once whether future Claude Code sessions in this project should use the map: you'd add a short note to their personal, uncommitted CLAUDE.local.md. Add it (`build.mjs <root> --claude-md`) only on a yes, and don't ask again on later updates if they said no. When we run outside Claude Code, or if that tool is missing, we skip asking about CLAUDE.local.md. On an update, start with what changed for what they asked (it's highlighted under **Recent work**).
 
 ## 9. Opening the map and asking questions
 
@@ -141,7 +143,7 @@ The map has a floating Ask bar. The user types a question, and the agent answers
   3. After each refresh, rebuild with `--artifact` and republish.
 
   Publishing uploads the map (paths, names, descriptions, structure), not the source code, to their private claude.ai account. Say that before you do it.
-- **Neither:** `floorplan/index.html` still opens directly in a browser. The Ask bar explains what's needed.
+- **Neither:** `floorplan/index.html` still opens directly in a browser. The Ask bar explains what's needed. When those tools are missing, the map and Health check still work, but asking questions on the map is unavailable.
 
 ### Sharing a copy
 
