@@ -9,10 +9,9 @@
 
 **See how your app actually fits together.**
 
-Claude or Codex reads your codebase and draws an interactive map of it. Every part, file and web request gets a plain-English name, and every connection between them is shown.
+We read your codebase and draw an interactive map of it. Every part, file and web request gets a plain-English name, and every connection between them is shown.
 
-[![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-plugin-D97757?style=flat-square)](https://code.claude.com/docs/en/overview)
-[![Codex plugin](https://img.shields.io/badge/Codex-plugin-111?style=flat-square)](docs/codex.md)
+[![Skill](https://img.shields.io/badge/skill-folder-111?style=flat-square)](docs/skill-install.md)
 [![Tests](https://img.shields.io/github/actions/workflow/status/haydenschmitty/floorplan/test.yml?branch=main&style=flat-square&label=tests)](https://github.com/haydenschmitty/floorplan/actions/workflows/test.yml)
 [![Version](https://img.shields.io/badge/version-0.6.3-111?style=flat-square)](CHANGELOG.md)
 [![License: MIT](https://img.shields.io/badge/license-MIT-111?style=flat-square)](LICENSE)
@@ -162,6 +161,10 @@ Want to click around yourself? Open the [live demo](https://haydenschmitty.githu
 </table>
 
 ## Install
+
+### Skill folder
+
+Copy the skill folder into a skills directory. See [Skill install](docs/skill-install.md) for copy commands and paths. See [Skill usage](docs/skill-usage.md) for how to run and use the skill.
 
 You need [Node.js 18+](https://nodejs.org) and either Claude Code or Codex. Floorplan runs on the plan you already have, with no API keys.
 
