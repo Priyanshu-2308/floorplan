@@ -11,7 +11,9 @@
 
 We read your codebase and draw an interactive map of it. Every part, file and web request gets a plain-English name, and every connection between them is shown.
 
-[![Skill](https://img.shields.io/badge/skill-folder-111?style=flat-square)](docs/skill-install.md)
+[![Antigravity](https://img.shields.io/badge/Antigravity-skill-4285F4?style=flat-square)](docs/skill-install.md)
+[![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-plugin-D97757?style=flat-square)](https://code.claude.com/docs/en/overview)
+[![Codex plugin](https://img.shields.io/badge/Codex-plugin-111?style=flat-square)](docs/codex.md)
 [![Tests](https://img.shields.io/github/actions/workflow/status/haydenschmitty/floorplan/test.yml?branch=main&style=flat-square&label=tests)](https://github.com/haydenschmitty/floorplan/actions/workflows/test.yml)
 [![Version](https://img.shields.io/badge/version-0.6.3-111?style=flat-square)](CHANGELOG.md)
 [![License: MIT](https://img.shields.io/badge/license-MIT-111?style=flat-square)](LICENSE)
@@ -34,11 +36,11 @@ We read your codebase and draw an interactive map of it. Every part, file and we
 
 You built an app, probably with a lot of help from AI, and it works. But ask "what happens when someone checks out?" or "what breaks if I change this?" and the honest answer is *no idea*.
 
-Floorplan gives you the diagram nobody drew. Ask Claude Code or Codex for a floorplan and a few minutes later you have a map you can explore, ask questions on, and keep up to date as you work.
+Floorplan gives you the diagram nobody drew. Ask Antigravity, Claude Code or Codex for a floorplan and a few minutes later you have a map you can explore, ask questions on, and keep up to date as you work.
 
 - **For builders:** understand the app you made, in your own words, without reading the code.
 - **For teams:** onboard someone in minutes, from the big picture down to the exact file.
-- **For working with AI:** after every change Claude or Codex makes, see exactly which parts it touched and why.
+- **For working with AI:** after every change Antigravity, Claude or Codex makes, see exactly which parts it touched and why.
 
 ## Floorplan, Archify or Understand Anything?
 
@@ -162,6 +164,27 @@ Want to click around yourself? Open the [live demo](https://haydenschmitty.githu
 
 ## Install
 
+### Antigravity
+
+Copy the `skills/floorplan` folder into your Antigravity skills directory so it is ready across all projects without cloning the repository each time:
+
+- Mac and Linux: `~/.gemini/antigravity/skills/floorplan`
+- Windows: `%USERPROFILE%\.gemini\antigravity\skills\floorplan`
+
+For a single project:
+- `<project-root>/.agents/skills/floorplan`
+
+You can also use the zero-dependency copy script:
+
+```bash
+node tools/copy-skill.mjs ~/.gemini/antigravity/skills/floorplan
+```
+
+Start a new chat session in Antigravity and ask:
+> Make me a floorplan of this app.
+
+See [Skill install](docs/skill-install.md) for copy commands and [Skill usage](docs/skill-usage.md) for how to use and update the map.
+
 ### Skill folder
 
 Copy the skill folder into a skills directory. See [Skill install](docs/skill-install.md) for copy commands and paths. See [Skill usage](docs/skill-usage.md) for how to run and use the skill.
@@ -198,7 +221,7 @@ Start a new chat and ask for a floorplan, or type `$floorplan`. The map's Ask ba
 
 ## Quick start
 
-1. Open your project in Claude Code or Codex. For a frontend and backend in separate repos, open the folder that holds both.
+1. Open your project in Antigravity, Claude Code or Codex. For a frontend and backend in separate repos, open the folder that holds both.
 2. Ask:
    > Make me a floorplan of this app.
 

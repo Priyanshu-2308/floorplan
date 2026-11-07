@@ -4,7 +4,7 @@ We use the floorplan skill after copying its folder into a skills directory.
 
 ## Starting a session
 
-After we copy the skill folder, we start a new session in our project folder. A running session does not pick up new skill folders until we restart it.
+After we copy the skill folder, we start a new session in our project folder. In Antigravity, open your project workspace and start a new chat session. A running session does not pick up new skill folders until we restart it.
 
 ## Making and updating maps
 

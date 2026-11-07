@@ -4,7 +4,17 @@ We copy the floorplan skill folder so it works as a normal skill. We do not need
 
 ## Where the folder goes
 
-We can install the skill for one project or for all projects.
+### Antigravity
+
+For all projects:
+- Mac and Linux: `~/.gemini/antigravity/skills/floorplan` (or `~/.gemini/config/skills/floorplan`)
+- Windows: `%USERPROFILE%\.gemini\antigravity\skills\floorplan` (or `%USERPROFILE%\.gemini\config\skills\floorplan`)
+
+For one project:
+- `<project-root>/.agents/skills/floorplan`
+- `<project-root>/.gemini/skills/floorplan`
+
+### General skill folders
 
 For one project:
 - `<project-root>/.skills/floorplan`
@@ -18,7 +28,33 @@ For all projects:
 
 We copy the `skills/floorplan` folder to the target path.
 
-### Mac and Linux
+### Antigravity
+
+For all projects on Mac and Linux:
+```bash
+mkdir -p ~/.gemini/antigravity/skills
+cp -r skills/floorplan ~/.gemini/antigravity/skills/floorplan
+```
+
+For all projects on Windows in PowerShell:
+```powershell
+New-Item -ItemType Directory -Force -Path "$HOME\.gemini\antigravity\skills"
+Copy-Item -Recurse -Force skills\floorplan "$HOME\.gemini\antigravity\skills\floorplan"
+```
+
+For all projects on Windows in Command Prompt:
+```cmd
+mkdir "%USERPROFILE%\.gemini\antigravity\skills"
+xcopy /E /I /Y skills\floorplan "%USERPROFILE%\.gemini\antigravity\skills\floorplan"
+```
+
+For a single project:
+```bash
+mkdir -p <project-root>/.agents/skills
+cp -r skills/floorplan <project-root>/.agents/skills/floorplan
+```
+
+### Other environments (Mac and Linux)
 
 For one project:
 ```bash
